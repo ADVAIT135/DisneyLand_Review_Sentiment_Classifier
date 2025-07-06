@@ -3,6 +3,9 @@ import spacy
 import joblib
 from nltk.corpus import stopwords
 
+import spacy
+spacy.load("en_core_web_sm")
+
 import nltk
 nltk.download('stopwords')
 
