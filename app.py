@@ -3,6 +3,9 @@ import spacy
 import joblib
 from nltk.corpus import stopwords
 
+import nltk
+nltk.download('stopwords')
+
 # Load artifacts
 vectorizer = joblib.load('vectorizer.pkl')
 clf = joblib.load('classifier.pkl')
