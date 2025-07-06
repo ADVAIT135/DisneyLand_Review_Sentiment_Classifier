@@ -1,5 +1,4 @@
 import streamlit as st
-import spacy
 import joblib
 from nltk.corpus import stopwords
 
