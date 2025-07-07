@@ -1,5 +1,6 @@
-streamlit
-joblib
-nltk
+
 spacy==3.7.2
 blis==0.7.9
+streamlit==1.30.0
+joblib==1.4.1
+nltk==3.9.0
