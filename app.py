@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 import nltk
 
 # Download WordNet and the multi-lingual data (once per session)
-nltk.download('wordnet', quiet=True)
+nltk.download('wordnet')
 nltk.download('omw-1.4', quiet=True)
 
 from nltk.corpus import wordnet
