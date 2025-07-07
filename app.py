@@ -2,19 +2,31 @@ import os
 import streamlit as st
 import joblib
 
-# Step 1: Download NLTK data once per session
+import os
+import streamlit as st
+
+# 1. Define & create a local nltk_data folder
+BASE_DIR = os.path.dirname(__file__)
+NLTK_DATA_DIR = os.path.join(BASE_DIR, 'nltk_data')
+os.makedirs(NLTK_DATA_DIR, exist_ok=True)
+
+# 2. Tell NLTK to look here first
+import nltk
+nltk.data.path.insert(0, NLTK_DATA_DIR)
+
+# 3. Download corpora once per Streamlit session
 @st.cache_resource
-def setup_nltk():
-    import nltk
-    nltk.download('stopwords', quiet=True)
-    nltk.download('wordnet', quiet=True)
-    nltk.download('omw-1.4', quiet=True)
+def download_nltk_data():
+    nltk.download('stopwords',    download_dir=NLTK_DATA_DIR, quiet=True)
+    nltk.download('wordnet',      download_dir=NLTK_DATA_DIR, quiet=True)
+    nltk.download('omw-1.4',      download_dir=NLTK_DATA_DIR, quiet=True)
     return
 
-setup_nltk()
+download_nltk_data()
 
-# Now safe to import corpora
+# 4. Now safe to import from nltk.corpus
 from nltk.corpus import stopwords, wordnet
+
 
 # Ensure spaCy model is available once
 @st.cache_resource
