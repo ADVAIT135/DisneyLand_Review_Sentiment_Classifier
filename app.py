@@ -1,7 +1,9 @@
 import streamlit as st
 import joblib
 from nltk.corpus import stopwords
+import nltk
 
+nltk.download('wordnet')
 
 #import nltk
 #nltk.download('stopwords')
