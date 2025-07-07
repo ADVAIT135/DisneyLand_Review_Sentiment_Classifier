@@ -3,7 +3,11 @@ import joblib
 from nltk.corpus import stopwords
 import nltk
 
-nltk.download('wordnet')
+# Download WordNet and the multi-lingual data (once per session)
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)
+
+from nltk.corpus import wordnet
 
 #import nltk
 #nltk.download('stopwords')
