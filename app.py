@@ -5,15 +5,18 @@ import joblib
 import os
 import streamlit as st
 
-# 1. Define & create a local nltk_data folder
-BASE_DIR = os.path.dirname(__file__)
-NLTK_DATA_DIR = os.path.join(BASE_DIR, 'nltk_data')
-os.makedirs(NLTK_DATA_DIR, exist_ok=True)
+import os
+os.environ['NLTK_DATA'] = os.path.join(os.path.dirname(__file__), 'nltk_data')
 
-# 2. Tell NLTK to look here first
+
+
 import nltk
-nltk.data.path.insert(0, NLTK_DATA_DIR)
 
+try:
+    nltk.data.find('')
+except LookupError:
+    nltk.download('')
+    
 # 3. Download corpora once per Streamlit session
 @st.cache_resource
 def download_nltk_data():
