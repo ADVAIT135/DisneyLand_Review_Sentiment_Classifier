@@ -1,37 +1,33 @@
 import os
 import streamlit as st
 import joblib
-
-import os
-import streamlit as st
-
-import os
-os.environ['NLTK_DATA'] = os.path.join(os.path.dirname(__file__), 'nltk_data')
-
-
-
 import nltk
 
-try:
-    nltk.data.find('')
-except LookupError:
-    nltk.download('')
-    
-# 3. Download corpora once per Streamlit session
+# 1. Setup NLTK data path
+NLTK_DATA_DIR = os.path.join(os.getcwd(), 'nltk_data')
+nltk.data.path.insert(0, NLTK_DATA_DIR)
+
+# 2. Ensure corpora are present (cached)
 @st.cache_resource
-def download_nltk_data():
-    nltk.download('stopwords',    download_dir=NLTK_DATA_DIR, quiet=True)
-    nltk.download('wordnet',      download_dir=NLTK_DATA_DIR, quiet=True)
-    nltk.download('omw-1.4',      download_dir=NLTK_DATA_DIR, quiet=True)
-    return
+def ensure_nltk_data():
+    targets = [
+        ('corpora/wordnet', 'wordnet'),
+        ('corpora/omw-1.4', 'omw-1.4'),
+        ('corpora/stopwords', 'stopwords'),
+    ]
+    for resource_path, pkg in targets:
+        try:
+            nltk.data.find(resource_path)
+        except LookupError:
+            nltk.download(pkg, download_dir=NLTK_DATA_DIR, quiet=True)
+    return True
 
-download_nltk_data()
+ensure_nltk_data()
 
-# 4. Now safe to import from nltk.corpus
-from nltk.corpus import stopwords, wordnet
+# 3. Imports now safe
+from nltk.corpus import wordnet, stopwords
 
-
-# Ensure spaCy model is available once
+# 4. Load spaCy model (cached)
 @st.cache_resource
 def load_spacy():
     import spacy
@@ -44,27 +40,26 @@ def load_spacy():
 
 nlp = load_spacy()
 
-# Load your artifacts
+# 5. Load ML artifacts
 vectorizer = joblib.load('vectorizer.pkl')
-clf        = joblib.load('classifier.pkl')
+clf = joblib.load('classifier.pkl')
 
+# 6. Streamlit UI
 st.title('Disneyland Review Sentiment Classifier')
 user_input = st.text_area('Enter a review:')
 
-# Preprocessing function
 def preprocess(text):
     doc = nlp(text)
     stop_words = set(stopwords.words('english'))
     tokens = [
-        token.lemma_.lower() 
-        for token in doc 
+        token.lemma_.lower()
+        for token in doc
         if token.is_alpha and token.text.lower() not in stop_words
     ]
     return ' '.join(tokens)
 
-# Classification
 if st.button('Classify'):
     clean = preprocess(user_input)
-    vect  = vectorizer.transform([clean])
-    pred  = clf.predict(vect)[0]
+    vect = vectorizer.transform([clean])
+    pred = clf.predict(vect)[0]
     st.write(f'Sentiment: {pred}')
